@@ -12,15 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
-    private PostController controller;
     private Router router;
 
     @Override
     public void init() {
         final var context = new AnnotationConfigApplicationContext("ru.netology");
+
+        final var controller = context.getBean(PostController.class);
         final var service = context.getBean(PostService.class);
         final var repository = context.getBean(PostRepository.class);
-        controller = new PostController(service);
+
         router = new Router(controller);
 
     }
