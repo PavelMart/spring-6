@@ -1,6 +1,7 @@
 package ru.netology.service;
 
 import org.springframework.stereotype.Service;
+import ru.netology.dtos.PostDto;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 import ru.netology.repository.PostRepository;
@@ -15,15 +16,15 @@ public class PostService {
         this.repository = repository;
     }
 
-    public List<Post> all() {
+    public List<PostDto> all() {
         return repository.all();
     }
 
-    public Post getById(long id) {
+    public PostDto getById(long id) {
         return repository.getById(id).orElseThrow(NotFoundException::new);
     }
 
-    public Post save(Post post) {
+    public PostDto save(Post post) {
         return repository.save(post);
     }
 

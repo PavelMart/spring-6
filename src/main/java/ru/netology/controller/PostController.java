@@ -2,6 +2,7 @@ package ru.netology.controller;
 
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
+import ru.netology.dtos.PostDto;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 import ru.netology.service.PostService;
@@ -22,18 +23,18 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> all() throws IOException {
+    public List<PostDto> all() throws IOException {
         return service.all();
     }
 
     @GetMapping("/{id}")
-    public Post getById(@PathVariable long id) throws IOException {
+    public PostDto getById(@PathVariable long id) throws IOException {
         return service.getById(id);
 
     }
 
     @PostMapping
-    public Post save(@RequestBody Post post) throws IOException {
+    public PostDto save(@RequestBody Post post) throws IOException {
         return service.save(post);
     }
 
