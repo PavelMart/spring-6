@@ -1,6 +1,7 @@
 package ru.netology.repository;
 
 import org.springframework.stereotype.Repository;
+import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 
 import java.util.Collections;
@@ -32,13 +33,17 @@ public class PostRepository {
             if (postMap.containsKey(id)) {
                 postMap.put(id, post);
             } else {
-                throw new IllegalArgumentException("Post with id " + id + " not found for update");
+                throw new NotFoundException("Post with id " + id + " not found for update");
             }
         }
         return post;
     }
 
     public void removeById(long id) {
-        postMap.remove(id);
+        if (postMap.containsKey(id)) {
+            postMap.remove(id);
+        } else {
+            throw new NotFoundException("Post with id " + id + " not found for delete");
+        }
     }
 }

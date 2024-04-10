@@ -1,7 +1,7 @@
 package ru.netology.controller;
 
 import com.google.gson.Gson;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 import ru.netology.service.PostService;
@@ -9,52 +9,36 @@ import ru.netology.service.PostService;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api/posts")
 public class PostController {
     private final PostService service;
     final Gson gson = new Gson();
-
 
     public PostController(PostService service) {
         this.service = service;
     }
 
-    public void all(HttpServletResponse response) throws IOException {
-        final var data = service.all();
-        setResponseData(data, response);
+    @GetMapping
+    public List<Post> all() throws IOException {
+        return service.all();
     }
 
-    public void getById(long id, HttpServletResponse response) throws IOException {
-        try {
-            final var data = service.getById(id);
-            setResponseData(data, response);
-        } catch (NotFoundException e) {
-            setResponseData("Post with id " + id + " not found", response);
-        }
+    @GetMapping("/{id}")
+    public Post getById(@PathVariable long id) throws IOException {
+        return service.getById(id);
 
     }
 
-    public void save(Reader body, HttpServletResponse response) throws IOException {
-        try {
-            final var post = gson.fromJson(body, Post.class);
-            final var data = service.save(post);
-            setResponseData(data, response);
-        } catch (IllegalArgumentException e) {
-            setResponseData(e.getMessage(), response);
-        }
+    @PostMapping
+    public Post save(@RequestBody Post post) throws IOException {
+        return service.save(post);
     }
 
-    public void removeById(long id, HttpServletResponse response) throws IOException {
-        try {
-            service.removeById(id);
-            setResponseData("Post with id " + id + " has been deleted", response);
-        } catch (NotFoundException e) {
-            setResponseData("Post with id " + id + " not found", response);
-        }
-    }
-
-    public void setResponseData(Object data, HttpServletResponse response) throws IOException {
-        response.getWriter().print(gson.toJson(data));
+    @DeleteMapping("/{id}")
+    public void removeById(@PathVariable  long id) throws IOException {
+        service.removeById(id);
     }
 }
